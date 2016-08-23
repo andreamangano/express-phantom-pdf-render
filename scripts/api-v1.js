@@ -1,22 +1,19 @@
 var express = require("express");
 var tmp = require('tmp');
+var validUrl = require('valid-url');
 var renderPdf = require('./renderPdf.js');
 
 // Create a router for a subapp API
 var api = express.Router();
 
 // Generate PDF
-api.get("/generatepdf/:url", function(req, res) {
+api.get("/generatepdf", function(req, res) {
 
-  var url = req.params.url;
+  var url = req.query.url;
 
-  var url = "http://localhost:3000";
+  console.log(url);
 
-  // TODO: Check if url is a valid url (by regex)
-  // https://regex.wtf/url-matching-regex-javascript/
-  // add condition
-
-  if(false) {
+  if(!validUrl.isUri(url)) {
 
     // Return a bad request status code
     res.status(400);
@@ -28,10 +25,6 @@ api.get("/generatepdf/:url", function(req, res) {
 
   var tmpFileName = './temp/'+tmp.tmpNameSync()+'.pdf';
   renderPdf.render(url, tmpFileName);
-  //.then(function () {console.log('ciao');});
-
-  //- TODO: occorre gestire il download a fine del processo di render
-
 
   // Read: https://github.com/ariya/phantomjs/issues/11084
   setTimeout(() => { 

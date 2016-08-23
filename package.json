@@ -1,0 +1,16 @@
+{
+  "name": "spike_pdfgenerator",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node server"
+  },
+  "author": "Andrea Mangano",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "jade": "^1.11.0",
+    "phantom": "^2.1.17",
+    "tmp": "0.0.28"
+  }
+}

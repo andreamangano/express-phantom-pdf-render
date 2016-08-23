@@ -2,6 +2,7 @@
 /node_modules
 /public
 /dev
+/temp
 
 ### Node template
 # Logs

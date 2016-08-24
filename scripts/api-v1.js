@@ -11,8 +11,7 @@ api.get("/generatepdf", function(req, res) {
 
   var url = req.query.url;
 
-  console.log(url);
-
+  // Check if the url format is valid
   if(!validUrl.isUri(url)) {
 
     // Return a bad request status code

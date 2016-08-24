@@ -1,8 +1,9 @@
-//- TODO: create the body for the page
-//- Handle the generate pdf request by ajax
+extends layout
 
-h1 Generate PDF Test Page
+block page
 
-p Click the following button to download this page in .pdf format
+  h1 Generate PDF Test Page
 
-a(href="/v1/generatepdf/?url=http://localhost:3000") Generate PDF
+  p Click the following button to download this page in .pdf format
+
+  a(href="/v1/generatepdf/?url=http://localhost:3000") Generate PDF

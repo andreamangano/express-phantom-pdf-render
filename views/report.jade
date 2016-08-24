@@ -1,0 +1,18 @@
+extends layout
+
+block page
+
+  h1 Report Page Test 2
+
+block JSInline
+  script.
+
+    var i
+
+    for (i = 0; i < localStorage.length; i++) {
+
+      var div = document.createElement("div");
+      div.innerHTML = localStorage.key(i) + "=[" + localStorage.getItem(localStorage.key(i)) + "]";
+
+      document.body.appendChild(div);
+    }

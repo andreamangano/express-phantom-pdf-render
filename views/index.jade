@@ -6,4 +6,33 @@ block page
 
   p Click the following button to download this page in .pdf format
 
-  a(href="/v1/generatepdf/?url=http://localhost:3000") Generate PDF
+  button(
+    class="_button-generate"
+  ) Generate PDF
+
+append JSInline
+  script.
+
+    // Example Report Data
+    var reportData = {name: 'Ciccio', surname:'Paduccio'};
+
+    // Call to post data and generate the pdf report
+    $('._button-generate').click(
+      function(event) {
+        event.preventDefault();
+
+        $.ajax(
+          {
+            type: 'POST',
+            url: '/render-pdf',
+            data: {data: reportData, url: 'http://localhost:3000/report'},
+            success: function(data) {
+              console.log(data.name);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+              alert(xhr.responseText);
+            }
+          }
+        );
+      }
+    );

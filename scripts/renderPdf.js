@@ -1,11 +1,13 @@
 var phantom = require('phantom');
-var Promise = require("es6-Promise").Promise;
 
-var render = function(url, filename) {
+// TODO: make function more generic passing config parameter
+
+var render = function(url, filename, reportData) {
 
   // Variables
   var sitepage = null;
   var phInstance = null;
+  var reportData = reportData;
 
   // Create the Phantom instance
   phantom.create()
@@ -31,19 +33,42 @@ var render = function(url, filename) {
       height: 768
     });
 
-    // Open the page
-    return page.open(url);
+    // Doesn't actually open any page
+    sitepage.setContent("", url);
+
+    var evaluateFunc = function() {
+
+      // TODO: set reportData into localStorage
+      // // Clear previous reportData
+      // localStorage.removeItem("reportData");
+
+      // // Set new reportData
+      // localStorage.setItem("reportData", reportData);
+    }
+
+    // Set the sitepage scope
+    //evaluateFunc.apply(sitepage);
+
+    sitepage.evaluate(evaluateFunc);
+
+    // Open the page and return the promise
+    return sitepage.open(url);
   })
   .then(status => {
 
     // Check the status
     if (status !== 'success') {
+
       //console.log('Unable to load the address!');
       phantom.exit();
     } else {
-      sitepage.render(filename, {format: 'pdf', quality: '100'});
-      sitepage.close();
-      phInstance.exit();
+
+      setTimeout(function () {
+
+        sitepage.render(filename, {format: 'pdf', quality: '100'});
+        sitepage.close();
+        phInstance.exit();
+      }, 2000); // Change timeout as required to allow sufficient time 
     }
   });
   // .catch(error => {

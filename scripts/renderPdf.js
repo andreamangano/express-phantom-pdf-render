@@ -36,20 +36,10 @@ var render = function(url, filename, reportData) {
     // Doesn't actually open any page
     sitepage.setContent("", url);
 
-    var evaluateFunc = function() {
-
-      // TODO: set reportData into localStorage
-      // // Clear previous reportData
-      // localStorage.removeItem("reportData");
-
-      // // Set new reportData
-      // localStorage.setItem("reportData", reportData);
-    }
-
-    // Set the sitepage scope
-    //evaluateFunc.apply(sitepage);
-
-    sitepage.evaluate(evaluateFunc);
+    sitepage.evaluate(function(reportData) {
+      localStorage.clear();
+      localStorage.setItem("reportData", reportData);
+    }, reportData);
 
     // Open the page and return the promise
     return sitepage.open(url);

@@ -28,8 +28,14 @@ append JSInline
             data: {data: reportData, url: 'http://localhost:3000/report'},
             success: function(data) {
 
-              // Handle the success
-              console.log(data.name);
+              /* TEST
+              var link = document.createElement('a');
+              link.href = "/download-pdf" + data.path;
+              link.download = 'report.pdf';
+              link.dispatchEvent(new MouseEvent('click'));
+              */
+
+              window.open("/download-pdf/" + encodeURIComponent(data.path));
             },
             error: function (xhr, ajaxOptions, thrownError) {
 

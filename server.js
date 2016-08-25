@@ -64,9 +64,9 @@ appRouter.post("/render-pdf", function(req, res) {
   }
 
   // TODO: improve with path resolve
-  var tmpFileName = './temp/'+tmp.tmpNameSync()+'.pdf';
+  var tmpFileName = tmp.tmpNameSync()+'.pdf';
 
-  var promise = renderPdf.render(url, tmpFileName, reportData);
+  var promise = renderPdf.render(url, './temp/'+tmpFileName, reportData);
 
   promise.then(
 
@@ -75,8 +75,8 @@ appRouter.post("/render-pdf", function(req, res) {
       // Return an OK status code
       res.status(200);
 
-      // Download the generated pdf file
-      res.json({ name: path.resolve(__dirname, tmpFileName)});
+      // Return the relative path to file
+      res.json({ path: '/temp/'+tmpFileName});
     })
   .catch(
     function(error) {
@@ -88,6 +88,20 @@ appRouter.post("/render-pdf", function(req, res) {
       res.json("Server error");
     }
   );
+});
+
+// Hide the path to final user
+appRouter.get("/download-pdf/:filepath", function(req, res, params) {
+  
+  try {
+    console.log("LOG: "+req.params.filepath);
+    // Renamed the requested file e download it
+    res.download('.'+req.params.filepath,"report.pdf");
+  } catch(error) {
+
+    res.status(404);
+    res.json(error);
+  }
 });
 
 // App listening on port 3000

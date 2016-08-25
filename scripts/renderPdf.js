@@ -58,11 +58,10 @@ var render = function(url, filename, reportData, config) {
 
         sitepage.evaluate(function(reportData) {
 
-          // Clear sessionStorage
-          sessionStorage.clear();
-
           // Populate sessionStorage with reportData
-          sessionStorage.setItem("reportData", reportData);
+          sessionStorage.setItem("reportData", JSON.stringify(reportData));
+
+          var ziocane = reportData;
         }, reportData);
 
         // Open the page and return the promise
@@ -81,7 +80,12 @@ var render = function(url, filename, reportData, config) {
           setTimeout(function () {
 
             // Render page with render config
-            sitepage.render(filename, config.file);
+            try {            
+              sitepage.render(filename, config.file);
+            }
+            catch(error) {
+              reject(error);
+            }
 
             // Close streams
             sitepage.close();

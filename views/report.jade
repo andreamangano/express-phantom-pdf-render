@@ -7,12 +7,7 @@ block page
 block JSInline
   script.
 
-    var i
-
-    for (i = 0; i < sessionStorage.length; i++) {
-
-      var div = document.createElement("div");
-      div.innerHTML = sessionStorage.key(i) + "=[" + sessionStorage.getItem( sessionStorage.key(i)) + "]";
-
-      document.body.appendChild(div);
-    }
+    var div = document.createElement("div");
+    var data = JSON.parse(sessionStorage.getItem("reportData"));
+    div.innerHTML = data;
+    document.body.appendChild(div);

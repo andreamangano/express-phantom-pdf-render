@@ -1,4 +1,4 @@
-# Render PDF Service with Expressjs and Phantomjs
+# Render PDF Service with ExpressJS and PhantomJS
 
 #### [Note: Work in progress.]
 

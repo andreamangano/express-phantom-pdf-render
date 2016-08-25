@@ -29,6 +29,7 @@ var render = function(url, filename, reportData, config) {
   // Merge defaultConfig with function parameter config (if it exists)
   var config = config ? extend(defaultConfig, config) : defaultConfig;
 
+  // Create new Promise for the render process
   var promise = new Promise(
 
     function(resolve, reject) {
@@ -71,7 +72,7 @@ var render = function(url, filename, reportData, config) {
 
         // Check the status
         if (status !== 'success') {
-          //console.log('Unable to load the address!');
+          reject('Unable to load the address!');
           phantom.exit();
         } else {
 
@@ -85,12 +86,13 @@ var render = function(url, filename, reportData, config) {
             sitepage.close();
             phInstance.exit();
 
+            // Resolve promise
             resolve();
           }, config.renderTime); 
         }
       })
       .catch(error => {
-        // console.log(error);
+
         phInstance.exit();
         reject(error);
       });

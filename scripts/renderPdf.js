@@ -72,6 +72,7 @@ var render = function(url, filename, reportData, config) {
 
         // Check the status
         if (status !== 'success') {
+          
           reject('Unable to load the address!');
           phantom.exit();
         } else {

@@ -58,11 +58,11 @@ var render = function(url, filename, reportData, config) {
 
         sitepage.evaluate(function(reportData) {
 
-          // Clear localStorage
-          localStorage.clear();
+          // Clear sessionStorage
+          sessionStorage.clear();
 
-          // Populate localstorage with reportData
-          localStorage.setItem("reportData", reportData);
+          // Populate sessionStorage with reportData
+          sessionStorage.setItem("reportData", reportData);
         }, reportData);
 
         // Open the page and return the promise
@@ -72,7 +72,7 @@ var render = function(url, filename, reportData, config) {
 
         // Check the status
         if (status !== 'success') {
-          
+
           reject('Unable to load the address!');
           phantom.exit();
         } else {

@@ -9,10 +9,10 @@ block JSInline
 
     var i
 
-    for (i = 0; i < localStorage.length; i++) {
+    for (i = 0; i < sessionStorage.length; i++) {
 
       var div = document.createElement("div");
-      div.innerHTML = localStorage.key(i) + "=[" + localStorage.getItem(localStorage.key(i)) + "]";
+      div.innerHTML = sessionStorage.key(i) + "=[" + sessionStorage.getItem( sessionStorage.key(i)) + "]";
 
       document.body.appendChild(div);
     }

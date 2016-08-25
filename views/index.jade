@@ -27,9 +27,13 @@ append JSInline
             url: '/render-pdf',
             data: {data: reportData, url: 'http://localhost:3000/report'},
             success: function(data) {
+
+              // Handle the success
               console.log(data.name);
             },
             error: function (xhr, ajaxOptions, thrownError) {
+
+              // Handle the error
               alert(xhr.responseText);
             }
           }

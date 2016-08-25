@@ -9,5 +9,5 @@ block JSInline
 
     var div = document.createElement("div");
     var data = JSON.parse(sessionStorage.getItem("reportData"));
-    div.innerHTML = data;
+    div.innerHTML = "Name: "+data.name+" - Surname: "+data.surname;
     document.body.appendChild(div);

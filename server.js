@@ -21,6 +21,9 @@ app.set("view engine", "jade");
 app.set("views", path.resolve(__dirname, "views"));
 var appRouter = express.Router();
 
+// Load external app settings
+var appSettings = require('./settings/app-settings.js');
+
 // Set body parser to retrieve post parameters
 
 // Support json encoded bodies
@@ -64,9 +67,9 @@ appRouter.post("/render-pdf", function(req, res) {
   }
 
   // TODO: improve with path resolve
-  var tmpFileName = tmp.tmpNameSync()+'.pdf';
+  var tmpFileName = appSettings.tempFolder+tmp.tmpNameSync()+'.pdf';
 
-  var promise = renderPdf.render(url, './temp/'+tmpFileName, reportData);
+  var promise = renderPdf.render(url, '.'+tmpFileName, reportData);
 
   promise.then(
 
@@ -76,7 +79,7 @@ appRouter.post("/render-pdf", function(req, res) {
       res.status(200);
 
       // Return the relative path to file
-      res.json({ path: '/temp/'+tmpFileName});
+      res.json({ path: tmpFileName});
     })
   .catch(
     function(error) {
@@ -94,7 +97,7 @@ appRouter.post("/render-pdf", function(req, res) {
 appRouter.get("/download-pdf/:filepath", function(req, res, params) {
   
   try {
-    console.log("LOG: "+req.params.filepath);
+
     // Renamed the requested file e download it
     res.download('.'+req.params.filepath,"report.pdf");
   } catch(error) {

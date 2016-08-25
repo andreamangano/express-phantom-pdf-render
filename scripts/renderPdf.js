@@ -1,6 +1,5 @@
 var phantom = require('phantom');
 var extend = require('extend');
-// TODO: make function more generic passing config parameter
 
 var render = function(url, filename, reportData, config) {
 
@@ -10,11 +9,16 @@ var render = function(url, filename, reportData, config) {
   var reportData = reportData;
 
   var defaultConfig = {
-    viewportSize: {
-      width: 1024,
-      height: 768
+    // Options type: "viewportSize" and "paperSize"
+    view: {
+      type: "paperSize",
+      size: {
+        format: 'A4',
+        orientation: 'portrait',
+        margin: '1cm'
+      }
     },
-    render: {
+    file: {
       format: 'pdf',
       quality: '100'
     },
@@ -25,61 +29,131 @@ var render = function(url, filename, reportData, config) {
   // Merge defaultConfig with function parameter config (if it exists)
   var config = config ? extend(defaultConfig, config) : defaultConfig;
 
-  // Create the Phantom instance
-  phantom.create()
-  .then(instance => {
-    // After instance is created
+  var p1 = new Promise(
 
-    // Assign to function scope
-    phInstance = instance;
+    function(resolve, reject) {
 
-    // Create a page object and return the promise
-    return instance.createPage();
-  })
-  .then(page => {
-    // After page is created              
+      phantom.create()
+      .then(instance => {
+        // After instance is created
 
-    // Assign to function scope
-    sitepage = page;
+        // Assign to function scope
+        phInstance = instance;
 
-    // TODO: set the layout properties
-    // Set the layou properties
-    sitepage.property('viewportSize', config.viewportSize);
+        // Create a page object and return the promise
+        return instance.createPage();
+      })
+      .then(page => {
+        // After page is created              
 
-    // Doesn't actually open any page
-    sitepage.setContent("", url);
+        // Assign to function scope
+        sitepage = page;
 
-    sitepage.evaluate(function(reportData) {
+        // Set the layou properties
+        sitepage.property(config.view.type, config.view.size);
 
-      // Clear localStorage
-      localStorage.clear();
+        // Doesn't actually open any page
+        sitepage.setContent("", url);
 
-      // Populate localstorage with reportData
-      localStorage.setItem("reportData", reportData);
-    }, reportData);
+        sitepage.evaluate(function(reportData) {
 
-    // Open the page and return the promise
-    return sitepage.open(url);
-  })
-  .then(status => {
+          // Clear localStorage
+          localStorage.clear();
 
-    // Check the status
-    if (status !== 'success') {
-      //console.log('Unable to load the address!');
-      phantom.exit();
-    } else {
+          // Populate localstorage with reportData
+          localStorage.setItem("reportData", reportData);
+        }, reportData);
 
-      setTimeout(function () {
+        // Open the page and return the promise
+        return sitepage.open(url);
+      })
+      .then(status => {
 
-        // Render page with render config
-        sitepage.render(filename, config.render);
+        // Check the status
+        if (status !== 'success') {
+          //console.log('Unable to load the address!');
+          phantom.exit();
+        } else {
 
-        // Close streams
-        sitepage.close();
+          // Read: https://github.com/ariya/phantomjs/issues/11084
+          setTimeout(function () {
+
+            // Render page with render config
+            sitepage.render(filename, config.file);
+
+            // Close streams
+            sitepage.close();
+            phInstance.exit();
+
+            resolve();
+          }, config.renderTime); 
+        }
+      })
+      .catch(error => {
+        // console.log(error);
         phInstance.exit();
-      }, config.renderTime); 
-    }
-  });
+        reject(error);
+      });
+
+    }); 
+
+  return p1;
+
+  // // Create the Phantom instance
+  // phantom.create()
+  // .then(instance => {
+  //   // After instance is created
+
+  //   // Assign to function scope
+  //   phInstance = instance;
+
+  //   // Create a page object and return the promise
+  //   return instance.createPage();
+  // })
+  // .then(page => {
+  //   // After page is created              
+
+  //   // Assign to function scope
+  //   sitepage = page;
+
+  //   // Set the layou properties
+  //   sitepage.property(config.view.type, config.view.size);
+
+  //   // Doesn't actually open any page
+  //   sitepage.setContent("", url);
+
+  //   sitepage.evaluate(function(reportData) {
+
+  //     // Clear localStorage
+  //     localStorage.clear();
+
+  //     // Populate localstorage with reportData
+  //     localStorage.setItem("reportData", reportData);
+  //   }, reportData);
+
+  //   // Open the page and return the promise
+  //   return sitepage.open(url);
+  // })
+  // .then(status => {
+
+  //   // Check the status
+  //   if (status !== 'success') {
+  //     //console.log('Unable to load the address!');
+  //     phantom.exit();
+  //   } else {
+
+  //     // Read: https://github.com/ariya/phantomjs/issues/11084
+  //     setTimeout(function () {
+
+  //       // Render page with render config
+  //       sitepage.render(filename, config.file);
+
+  //       // Close streams
+  //       sitepage.close();
+  //       phInstance.exit();
+  //     }, config.renderTime); 
+  //   }
+  // });
   // .catch(error => {
   //   // console.log(error);
   //   phInstance.exit();

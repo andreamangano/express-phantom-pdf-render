@@ -62,20 +62,32 @@ appRouter.post("/render-pdf", function(req, res) {
     return;
   }
 
+  // TODO: improve with path resolve
   var tmpFileName = './temp/'+tmp.tmpNameSync()+'.pdf';
 
   // TODO: make it with promise
-  renderPdf.render(url, tmpFileName, reportData);
+  var promise = renderPdf.render(url, tmpFileName, reportData);
 
-  // Read: https://github.com/ariya/phantomjs/issues/11084
-  setTimeout(() => { 
+  promise.then(
+    // Scrivi un log con un messaggio e un valore
+    function() {
 
-    // Return an OK status code
-    res.status(200);
-    // Download the generated pdf file
-    // res.download(tmpFileName, 'report.pdf');
-    res.json({ name: path.resolve(__dirname, tmpFileName)});
-  }, 4000);
+      // Return an OK status code
+      res.status(200);
+
+      // Download the generated pdf file
+      res.json({ name: path.resolve(__dirname, tmpFileName)});
+    })
+  .catch(
+    function(error) {
+      
+      // Return a server error
+      res.status(500);
+
+      // Return a json with the error description
+      res.json("Server error");
+    }
+  );
 });
 
 // App listening on port 3000

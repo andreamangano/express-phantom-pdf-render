@@ -25,6 +25,7 @@ var appRouter = express.Router();
 
 // Support json encoded bodies
 app.use(bodyParser.json());
+
 // Support encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -65,11 +66,10 @@ appRouter.post("/render-pdf", function(req, res) {
   // TODO: improve with path resolve
   var tmpFileName = './temp/'+tmp.tmpNameSync()+'.pdf';
 
-  // TODO: make it with promise
   var promise = renderPdf.render(url, tmpFileName, reportData);
 
   promise.then(
-    // Scrivi un log con un messaggio e un valore
+
     function() {
 
       // Return an OK status code
@@ -80,7 +80,7 @@ appRouter.post("/render-pdf", function(req, res) {
     })
   .catch(
     function(error) {
-      
+
       // Return a server error
       res.status(500);
 

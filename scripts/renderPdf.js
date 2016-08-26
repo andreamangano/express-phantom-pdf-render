@@ -9,14 +9,13 @@ var render = function(url, filename, reportData, config) {
   var reportData = reportData;
 
   var defaultConfig = {
-    // Options type: "viewportSize" and "paperSize"
-    view: {
-      type: "paperSize",
-      size: {
-        format: 'A4',
-        orientation: 'portrait',
-        margin: '1cm'
-      }
+    paperSize: {
+      format: 'A2',
+      orientation: 'portrait',
+      margin: '0'
+    },
+    viewportSize: {
+      width: '960px'
     },
     file: {
       format: 'pdf',
@@ -50,8 +49,9 @@ var render = function(url, filename, reportData, config) {
         // Assign to function scope
         sitepage = page;
 
-        // Set the layou properties
-        sitepage.property(config.view.type, config.view.size);
+        // Set the layout properties
+        sitepage.property('paperSize', config.paperSize);
+        sitepage.property('viewportSize', config.viewportSize);
 
         // Doesn't actually open any page
         sitepage.setContent("", url);
